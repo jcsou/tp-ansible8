@@ -1,0 +1,40 @@
+global
+    log /dev/log    local0
+    log /dev/log    local1 notice
+    chroot /var/lib/haproxy
+    user haproxy
+    group haproxy
+    daemon
+    stats socket /var/run/haproxy.sock
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    option                  redispatch
+    retries                 3
+    timeout http-request    1s
+    timeout http-keep-alive 1s
+    timeout check           1s
+    timeout client          50s
+    timeout server          50s
+    timeout connect         1s
+    maxconn                 3000
+
+listen stats
+    bind 0.0.0.0:9000
+    stats enable
+    stats uri /
+
+frontend  my_frontend
+    bind *:80
+    default_backend be_app_servers
+
+backend be_app_servers
+    balance roundrobin
+    option httpchk
+{% for server in groups['app-servers'] %}
+    server      vm_{{ server|replace('.', '_') }} {{ server }}:8080 check
+{% endfor %}
+

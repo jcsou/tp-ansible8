@@ -1,6 +1,37 @@
 # install.yml
 ---
 
+- hosts: load-balancers
+  gather_facts: false
+  become: true
+  tasks:
+  - name: install HAProxy
+    package:
+      name: haproxy
+  - name: allow service to start
+    lineinfile:
+      dest: /etc/default/haproxy
+      regexp: ENABLED=.*
+      line: ENABLED=1
+  - name: Install configuration file
+    template:
+      src: haproxy.cfg.j2
+      dest: /etc/haproxy/haproxy.cfg
+  - name: start / enable HAProxy
+    service:
+      name: haproxy
+      enabled: true
+      state: started
+  - name: wait for HAProxy to be up on port 9000
+    wait_for:
+      port: 9000
+  - name: wait for HAProxy to be up on port 80
+    wait_for:
+      port: 80
+  - name: ensure stat page returns 200
+    uri:
+      url: http://127.0.0.1:9000/
+
 - hosts: app-servers
   become: true
   gather_facts: false
