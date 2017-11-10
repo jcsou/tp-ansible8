@@ -1,0 +1,15 @@
+# roles/haproxy/tasks/tests.yml
+---
+
+- name: wait for HAProxy to be up on port 9000
+  wait_for:
+    port: 9000
+
+- name: wait for HAProxy to be up on port 80
+  wait_for:
+    port: 80
+
+- name: ensure stat page returns 200
+  uri:
+    url: http://127.0.0.1:9000/
+

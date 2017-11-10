@@ -5,7 +5,7 @@ global
     user haproxy
     group haproxy
     daemon
-    stats socket /var/run/haproxy.sock
+    stats socket /var/run/haproxy.sock level admin
 
 defaults
     log     global
@@ -26,7 +26,7 @@ listen stats
     bind 0.0.0.0:9000
     stats enable
     stats uri /
-
+ 
 frontend  my_frontend
     bind *:80
     default_backend be_app_servers

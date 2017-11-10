@@ -1,0 +1,15 @@
+# roles/tomcat/tasks/main.yml
+---
+- name: install tomcat
+  package:
+    name: tomcat7
+
+- name: start / enable tomcat
+  service:
+    name: tomcat7
+    enabled: true
+    state: started
+
+- name: include tests
+  include_tasks: tests.yml
+  tags: tests
