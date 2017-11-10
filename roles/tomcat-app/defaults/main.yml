@@ -1,0 +1,8 @@
+# roles/tomcat-app/defaults/main.yml
+---
+
+tomcat_app_repository: https://s3-eu-west-1.amazonaws.com/octo-formation-ansible/SimpleWar
+tomcat_app_name: SimpleWar
+tomcat_app_env_name: CHANGE_ME
+...
+

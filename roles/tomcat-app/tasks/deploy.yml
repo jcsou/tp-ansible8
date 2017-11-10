@@ -1,0 +1,20 @@
+# roles/tomcat-app/tasks/deploy.yml
+---
+
+- name: Stop tomcat
+  service:
+    name: tomcat7
+    state: stopped
+
+- name: Delete existing webapp
+  file:
+    name: /var/lib/tomcat7/webapps/{{ tomcat_app_name }}
+    state: absent
+  notify: Restart tomcat
+
+- name: Get application war
+  get_url:
+    url: "{{ tomcat_app_repository }}/{{ tomcat_app_name }}-{{ tomcat_app_version }}.war"
+    dest: /var/lib/tomcat7/webapps/{{ tomcat_app_name }}.war
+    force: yes
+  notify: Restart tomcat

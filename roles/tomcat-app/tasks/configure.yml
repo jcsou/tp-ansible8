@@ -1,0 +1,8 @@
+# roles/tomcat-app/tasks/configure.yml
+---
+
+- name: Deploy configuration
+  template:
+    src: app.properties.j2
+    dest: /usr/share/tomcat7/lib/app.properties
+  notify: Restart tomcat

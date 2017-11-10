@@ -1,0 +1,15 @@
+# roles/tomcat-app/tasks/tests.yml
+---
+
+- name: Get running application version
+  uri:
+    url: http://localhost:8080/{{ tomcat_app_name }}/version
+    return_content: yes
+    timeout: 180
+  register: tomcat_app_version_check_result
+
+- name: Verify running version matches deployed version
+  fail:
+    msg: "Running version does not match deployed version"
+  when: tomcat_app_version_check_result.json.version != tomcat_app_version
+

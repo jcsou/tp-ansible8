@@ -1,0 +1,14 @@
+# roles/tomcat-app/tasks/check-deploy-needed.yml
+---
+
+- name: Get currently running application version
+  uri:
+    url: http://localhost:8080/{{ tomcat_app_name }}/version
+    return_content: yes
+    timeout: 60
+  failed_when: false
+  register: tomcat_app_predeploy_version
+
+- name: Compute whether deployment is needed
+  set_fact:
+    tomcat_app_needs_deploy: tomcat_app_predeploy_version.status != 200 or (tomcat_app_predeploy_version.json.version != '{{ tomcat_app_version }}')
