@@ -1,7 +1,6 @@
 # roles/tomcat-app/tasks/disable-in-haproxy.yml
 
 - name: remove backend from haproxy
-  become: yes
   haproxy:
     state: disabled
     host: "vm_{{ inventory_hostname|replace('.','_') }}"
