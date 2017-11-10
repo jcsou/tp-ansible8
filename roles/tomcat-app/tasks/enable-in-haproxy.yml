@@ -1,0 +1,10 @@
+# roles/tomcat-app/tasks/enable-in-haproxy.yml
+
+- name: add backend to haproxy
+  haproxy:
+    state: enabled
+    host: "vm_{{ inventory_hostname|replace('.','_') }}"
+    backend: be_app_servers
+    wait: true
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['load-balancers']|default([]) }}"

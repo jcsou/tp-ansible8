@@ -13,3 +13,5 @@
 
 - include_tasks: tests.yml
 
+- include_tasks: enable-in-haproxy.yml
+

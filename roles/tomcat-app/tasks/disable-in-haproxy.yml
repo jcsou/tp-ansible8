@@ -1,0 +1,11 @@
+# roles/tomcat-app/tasks/disable-in-haproxy.yml
+
+- name: remove backend from haproxy
+  become: yes
+  haproxy:
+    state: disabled
+    host: "vm_{{ inventory_hostname|replace('.','_') }}"
+    backend: be_app_servers
+    wait: true
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['load-balancers']|default([]) }}"

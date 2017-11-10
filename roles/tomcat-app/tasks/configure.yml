@@ -5,4 +5,8 @@
   template:
     src: app.properties.j2
     dest: /usr/share/tomcat7/lib/app.properties
+  register: configuration_result
   notify: Restart tomcat
+
+- include_tasks: disable-in-haproxy.yml
+  when: configuration_result | changed
