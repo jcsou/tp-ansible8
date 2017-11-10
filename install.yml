@@ -1,0 +1,23 @@
+# install.yml
+---
+
+- hosts: app-servers
+  become: true
+  gather_facts: false
+  tasks:
+  - name: install tomcat
+    package:
+      name: tomcat7
+  - name: start / enable tomcat
+    service:
+      name: tomcat7
+      enabled: true
+      state: started
+  - name: wait for Tomcat to be up on port 8080
+    wait_for:
+      port: 8080
+  - name: ensure home page returns 200
+    uri:
+      url: http://127.0.0.1:8080/
+
+...
